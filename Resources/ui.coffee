@@ -9,32 +9,21 @@ $$.ui =
     container = Ti.UI.createView
       top: 10
       left: 10
-      width: 300
+      width: 290
       height: 'auto'
       layout: 'vertical'
 
-    title = Ti.UI.createLabel
-      text: params.title
-      color: "#000"
-      top: 0
-      bottom: 5
-      left: 0
-      width: 'auto'
-      height: 'auto'
-      font:
-        fontSize: 16
+    if params.image
+      Ti.API.debug params.image
+      container.add Ti.UI.createImageView
+        image: params.image
+        width: 100
+        height: 100
+        top: 0
+        bottom: 3
+        left: 5
 
-    # date = Ti.UI.createLabel
-    #   text: params.date
-    #   width: 'auto'
-    #   height: 'auto'
-    #   top: 10
-    #   right: 10
-    #   color: '#999'
-    #   font:
-    #     fontSize: 14
-
-    messageContainer = Ti.UI.createView
+    titleContainer = Ti.UI.createView
       top: 0
       left: 0
       height: 'auto'
@@ -45,7 +34,19 @@ $$.ui =
       image: params.icon
       width: 16
       height: 16
+      top: 2
       left: 0
+
+    title = Ti.UI.createLabel
+      text: params.title
+      color: "#000"
+      top: 0
+      bottom: 5
+      left: 3
+      width: 'auto'
+      height: 'auto'
+      font:
+        fontSize: 16
 
     message = Ti.UI.createLabel
       text: params.message
@@ -58,10 +59,10 @@ $$.ui =
       font:
         fontSize: 14
 
-    messageContainer.add favicon
-    messageContainer.add message
-    container.add title
-    container.add messageContainer
+    titleContainer.add favicon
+    titleContainer.add title
+    container.add titleContainer
+    container.add message
     row.add container
     # row.add date
 

@@ -4,7 +4,7 @@ Ti.include "socket.js"
 Ti.UI.setBackgroundColor "#fff"
 
 win = Ti.UI.createWindow
-  title: "Timeline"
+  title: "Chrome To iOS"
 win.hideTabBar()
 
 dummy = Ti.UI.createTableViewRow
@@ -19,6 +19,29 @@ table.prependRow = (row) ->
   table.insertRowBefore 0, row,
     animationStyle:Ti.UI.iPhone.RowAnimationStyle.LEFT
 
+tabGroup  =Ti.UI.createTabGroup()
+tab = Ti.UI.createTab
+  window: win
+tabGroup.addTab tab
+tabGroup.open()
+
+## APN (doesn't work, hmm...)
+# Ti.Network.registerForPushNotifications
+#   types: [
+#     Ti.Network.NOTIFICATION_TYPE_BADGE,
+#     Ti.Network.NOTIFICATION_TYPE_ALERT,
+#     Ti.Network.NOTIFICATION_TYPE_SOUND
+#   ]
+#   success: (e) ->
+#     Ti.API.debug e
+#     alert e.deviceToken
+#   error: (e) ->
+#     alert e.error
+#     Ti.API.debug e.error
+#   callback: (e) ->
+#     alert "incoming push notification!"
+#     Ti.API.debug e
+
 ## events
 socket.connect win
 
@@ -28,9 +51,10 @@ socket.on "hello", (e) ->
 
 socket.on 'openUrl', (params) ->
   table.prependRow $$.ui.createRow
-    title: 'URLを開く'
+    title: params.title || params.url
     icon: "http://favicon.st-hatena.com/?url=#{params.url}"
-    message: params.url
+    message: 'URLを開く'
+    image: params.image
     hasChild: true
     click: ->
       w = Ti.UI.createWindow()
@@ -40,9 +64,9 @@ socket.on 'openUrl', (params) ->
 
 socket.on 'openMap', (params) ->
   table.prependRow $$.ui.createRow
-    title: 'マップを開く'
+    title: "#{params.latitude}, #{params.longitude}"
     icon: '/images/gmaps.ico'
-    message: "#{params.latitude}, #{params.longitude}"
+    message: 'マップを開く'
     hasChild: true
     click: ->
       w = Ti.UI.createWindow()
@@ -65,9 +89,9 @@ socket.on 'openMap', (params) ->
 
 socket.on 'pbcopy', (params) ->
   table.prependRow $$.ui.createRow
-    title: 'クリップボードにコピー'
+    title: params.text
     icon: '/images/note_pinned.ico'
-    message: params.text
+    message: 'クリップボードにコピー'
     hasChild: false
     click: ->
       Ti.UI.Clipboard.setText params.text
@@ -75,9 +99,3 @@ socket.on 'pbcopy', (params) ->
 socket.on 'phoneCall', (params) ->
   Ti.API.debug params.tel
   Ti.Platform.openURL "tel:#{params.tel}"
-
-tabGroup  =Ti.UI.createTabGroup()
-tab = Ti.UI.createTab
-  window: win
-tabGroup.addTab tab
-tabGroup.open()

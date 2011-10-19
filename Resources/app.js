@@ -3,7 +3,7 @@ Ti.include("ui.js");
 Ti.include("socket.js");
 Ti.UI.setBackgroundColor("#fff");
 win = Ti.UI.createWindow({
-  title: "Timeline"
+  title: "Chrome To iOS"
 });
 win.hideTabBar();
 dummy = Ti.UI.createTableViewRow({
@@ -19,15 +19,22 @@ table.prependRow = function(row) {
     animationStyle: Ti.UI.iPhone.RowAnimationStyle.LEFT
   });
 };
+tabGroup = Ti.UI.createTabGroup();
+tab = Ti.UI.createTab({
+  window: win
+});
+tabGroup.addTab(tab);
+tabGroup.open();
 socket.connect(win);
 socket.on("hello", function(e) {
   return alert("hello!");
 });
 socket.on('openUrl', function(params) {
   return table.prependRow($$.ui.createRow({
-    title: 'URLを開く',
+    title: params.title || params.url,
     icon: "http://favicon.st-hatena.com/?url=" + params.url,
-    message: params.url,
+    message: 'URLを開く',
+    image: params.image,
     hasChild: true,
     click: function() {
       var w;
@@ -41,9 +48,9 @@ socket.on('openUrl', function(params) {
 });
 socket.on('openMap', function(params) {
   return table.prependRow($$.ui.createRow({
-    title: 'マップを開く',
+    title: "" + params.latitude + ", " + params.longitude,
     icon: '/images/gmaps.ico',
-    message: "" + params.latitude + ", " + params.longitude,
+    message: 'マップを開く',
     hasChild: true,
     click: function() {
       var anno, w;
@@ -72,9 +79,9 @@ socket.on('openMap', function(params) {
 });
 socket.on('pbcopy', function(params) {
   return table.prependRow($$.ui.createRow({
-    title: 'クリップボードにコピー',
+    title: params.text,
     icon: '/images/note_pinned.ico',
-    message: params.text,
+    message: 'クリップボードにコピー',
     hasChild: false,
     click: function() {
       return Ti.UI.Clipboard.setText(params.text);
@@ -85,9 +92,3 @@ socket.on('phoneCall', function(params) {
   Ti.API.debug(params.tel);
   return Ti.Platform.openURL("tel:" + params.tel);
 });
-tabGroup = Ti.UI.createTabGroup();
-tab = Ti.UI.createTab({
-  window: win
-});
-tabGroup.addTab(tab);
-tabGroup.open();
