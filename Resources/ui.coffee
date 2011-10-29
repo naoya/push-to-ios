@@ -6,6 +6,8 @@ $$.ui =
       layout: 'absolute'
       hasChild: params.hasChild
 
+    row.clickEvent = params.click
+
     container = Ti.UI.createView
       top: 10
       left: 10
@@ -66,6 +68,6 @@ $$.ui =
     row.add container
     # row.add date
 
-    row.addEventListener 'click', params.click
+    # row.addEventListener 'click', params.click
 
     return row

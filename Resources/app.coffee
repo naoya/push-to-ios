@@ -42,6 +42,9 @@ tabGroup.open()
 #     alert "incoming push notification!"
 #     Ti.API.debug e
 
+table.addEventListener 'click', (e) ->
+  e.rowData.clickEvent()
+
 ## events
 socket.connect win
 

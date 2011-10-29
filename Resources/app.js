@@ -25,6 +25,9 @@ tab = Ti.UI.createTab({
 });
 tabGroup.addTab(tab);
 tabGroup.open();
+table.addEventListener('click', function(e) {
+  return e.rowData.clickEvent();
+});
 socket.connect(win);
 socket.on("hello", function(e) {
   return alert("hello!");

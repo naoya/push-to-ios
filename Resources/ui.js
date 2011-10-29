@@ -9,6 +9,7 @@ $$.ui = {
       layout: 'absolute',
       hasChild: params.hasChild
     });
+    row.clickEvent = params.click;
     container = Ti.UI.createView({
       top: 10,
       left: 10,
@@ -70,7 +71,6 @@ $$.ui = {
     container.add(titleContainer);
     container.add(message);
     row.add(container);
-    row.addEventListener('click', params.click);
     return row;
   }
 };
